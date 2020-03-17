@@ -1,44 +1,42 @@
 package com.budgetyoufool.entitis;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-
 public class Transaction {
-    private String description;
-    private BigDecimal amount;
+
+    private Long id;
+    private String name;
     private LocalDate date;
-    private TransactionLabel label;
+    private Categories category;
+    private BigDecimal amount;
 
-    public Transaction() {
+    public Transaction(String name) {
+        this.name = name;
     }
 
-    public Transaction(String description, BigDecimal amount, LocalDate date, TransactionLabel label) {
-        if (BigDecimal.ZERO.compareTo(amount) > 0) {
-            throw new IllegalArgumentException("Transaction value can't be negative");
-        }
-        this.description = description;
-        this.amount = amount;
+    public Transaction(Long id, String name, LocalDate date, Categories category, BigDecimal amount) {
+        this.id = id;
+        this.name = name;
         this.date = date;
-        this.label = label;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+        this.category = category;
         this.amount = amount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getDate() {
@@ -49,11 +47,19 @@ public class Transaction {
         this.date = date;
     }
 
-    public TransactionLabel getLabel() {
-        return label;
+    public Categories getCategory() {
+        return category;
     }
 
-    public void setLabel(TransactionLabel label) {
-        this.label = label;
+    public void setCategory(Categories category) {
+        this.category = category;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }
