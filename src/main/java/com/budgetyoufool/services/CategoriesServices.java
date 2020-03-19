@@ -19,6 +19,7 @@ public class CategoriesServices implements CategoriesInterface {
 
     @Override
     public void createCategory(String name) {
+        checkIfNewCategoryIsProper(name);
         Categories categories = new Categories();
         categories.setName(name);
         categoriesRepo.save(categories);
@@ -37,5 +38,15 @@ public class CategoriesServices implements CategoriesInterface {
     @Override
     public void deleteCategory() {
 
+    }
+
+    private void checkIfNewCategoryIsProper(String name) {
+        if (categoriesRepo.findCategoriesByName(name) != null) {
+            throw new IllegalArgumentException("Such a category already exist!");
+        } else if (name == null) {
+            throw new NullPointerException("Name can't be null value!");
+        } else if (name.isBlank()) {
+            throw new IllegalArgumentException("Categories name cant be empty!");
+        }
     }
 }

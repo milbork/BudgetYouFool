@@ -11,6 +11,10 @@ public class Categories {
     public Categories() {
     }
 
+    public Categories(String name) {
+        this.name = name;
+    }
+
     public Categories(Long id, String name, List<Transaction> transactions) {
         this.id = id;
         this.name = name;
