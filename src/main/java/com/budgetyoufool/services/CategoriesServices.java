@@ -30,12 +30,12 @@ public class CategoriesServices implements CategoriesInterface {
     }
 
     @Override
-    public void updateTransaction() {
+    public void updateCategory() {
 
     }
 
     @Override
-    public void deleteTransaction() {
+    public void deleteCategory() {
 
     }
 }

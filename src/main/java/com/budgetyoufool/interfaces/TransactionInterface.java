@@ -1,9 +1,10 @@
 package com.budgetyoufool.interfaces;
 
+import com.budgetyoufool.DTO.*;
 
 public interface TransactionInterface {
 
-    public void createTransaction();
+    public void createTransaction(TransactionDTO dto);
 
     public void readTransaction();
 

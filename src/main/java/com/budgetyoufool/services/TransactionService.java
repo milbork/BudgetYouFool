@@ -1,14 +1,16 @@
 package com.budgetyoufool.services;
 
+import com.budgetyoufool.entitis.Transaction;
 import com.budgetyoufool.interfaces.TransactionInterface;
 import com.budgetyoufool.repositorys.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.budgetyoufool.DTO.*;
 
 @Service
 public class TransactionService implements TransactionInterface {
 
-    private final TransactionRepo transactionRepo;
+    private TransactionRepo transactionRepo;
 
     @Autowired
     public TransactionService(TransactionRepo transactionRepo) {
@@ -17,8 +19,13 @@ public class TransactionService implements TransactionInterface {
 
 
     @Override
-    public void createTransaction() {
-
+    public void createTransaction(TransactionDTO dto) {
+        Transaction transaction = new Transaction();
+        transaction.setName(dto.getName());
+        transaction.setAmount(dto.getAmount());
+        transaction.setDate(dto.getDate());
+        transaction.setCategory(dto.getCategory());
+        transactionRepo.save(transaction);
     }
 
     @Override

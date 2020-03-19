@@ -8,8 +8,8 @@ public interface CategoriesInterface {
 
     public void readCategory();
 
-    public void updateTransaction();
+    public void updateCategory();
 
-    public void deleteTransaction();
-    //test
+    public void deleteCategory();
+
 }

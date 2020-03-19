@@ -1,9 +1,11 @@
-package com.budgetyoufool.entitis;
+package com.budgetyoufool.DTO;
+
+import com.budgetyoufool.entitis.Categories;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Transaction {
+public class TransactionDTO {
 
     private Long id;
     private String name;
@@ -11,10 +13,10 @@ public class Transaction {
     private Categories category;
     private BigDecimal amount;
 
-    public Transaction() {
+    public TransactionDTO() {
     }
 
-    public Transaction(Long id, String name, LocalDate date, Categories category, BigDecimal amount) {
+    public TransactionDTO(Long id, String name, LocalDate date, Categories category, BigDecimal amount) {
         this.id = id;
         this.name = name;
         this.date = date;
