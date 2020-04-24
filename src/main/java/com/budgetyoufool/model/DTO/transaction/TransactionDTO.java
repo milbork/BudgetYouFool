@@ -1,24 +1,17 @@
-package com.budgetyoufool.model.transaction;
-
+package com.budgetyoufool.model.DTO.transaction;
 
 import lombok.*;
 
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class Transaction {
+public class TransactionDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private long id;
     @NonNull
     private BigDecimal amount;
@@ -26,6 +19,4 @@ public class Transaction {
     private String description;
     @NonNull
     private LocalDate date;
-
-
 }

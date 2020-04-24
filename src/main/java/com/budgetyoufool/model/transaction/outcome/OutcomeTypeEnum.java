@@ -1,6 +1,6 @@
 package com.budgetyoufool.model.transaction.outcome;
 
-public enum OutcomeType {
+public enum OutcomeTypeEnum {
 
     FOOD,
     TRANSPORT,

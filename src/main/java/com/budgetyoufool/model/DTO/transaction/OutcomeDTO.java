@@ -1,23 +1,21 @@
-package com.budgetyoufool.model.transaction.outcome;
+package com.budgetyoufool.model.DTO.transaction;
 
 import com.budgetyoufool.model.transaction.Transaction;
+import com.budgetyoufool.model.transaction.outcome.OutcomeTypeEnum;
 import lombok.*;
 
-import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class Outcome extends Transaction {
-
+public class OutcomeDTO extends Transaction {
     @NonNull
     private OutcomeTypeEnum outcomeTypeEnum;
 
-    public Outcome(@NonNull BigDecimal amount, @NonNull String description, @NonNull LocalDate date, OutcomeTypeEnum outcomeTypeEnum) {
+    public OutcomeDTO(@NonNull BigDecimal amount, @NonNull String description, @NonNull LocalDate date, OutcomeTypeEnum outcomeTypeEnum) {
         super(amount, description, date);
         this.outcomeTypeEnum = outcomeTypeEnum;
     }
