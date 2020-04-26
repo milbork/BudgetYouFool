@@ -1,7 +1,7 @@
 package com.budgetyoufool.controller;
 
 import com.budgetyoufool.model.DTO.transaction.IncomeDTO;
-import com.budgetyoufool.model.transaction.income.Income;
+import com.budgetyoufool.model.DTO.transaction.OutcomeDTO;
 import com.budgetyoufool.service.transaction.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +28,12 @@ public class TransactionController {
 
 
 
-    @GetMapping(value = "/addTransaction/income", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> newTransaction() {
-        Income income = new Income();
+    @GetMapping(value = "/addTransaction/income")
+    public ResponseEntity<String> addIncome() {
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("responded", "MyController");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .headers(headers)
@@ -40,12 +41,33 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/addTransaction/income", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IncomeDTO> newTransaction(@RequestBody IncomeDTO income) throws URISyntaxException {
+    public ResponseEntity<IncomeDTO> addIncome(@RequestBody IncomeDTO income) throws URISyntaxException {
 
-        IncomeDTO save = transactionService.createIncome(income);
+        IncomeDTO transfer = transactionService.createIncome(income);
 
         return ResponseEntity
-                .created(new URI(String.format("/addTransaction/income/%d", save.getId())))
-                .body(save);
+                .created(new URI(String.format("/addTransaction/income/%s", transfer.getId())))
+                .body(transfer);
+    }
+
+    @GetMapping(value = "/addTransaction/outcome")
+    public ResponseEntity<String> addOutcome() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("responded", "MyController");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .body("Set new outcome");
+    }
+
+    @PostMapping(value = "/addTransaction/outcome", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OutcomeDTO> addOutcome(@RequestBody OutcomeDTO outcome) throws URISyntaxException {
+
+        OutcomeDTO transfer = transactionService.createOutcome(outcome);
+
+        return ResponseEntity
+                .created(new URI(String.format("/addTransaction/outcome/%s", transfer.getId())))
+                .body(transfer);
     }
 }

@@ -2,15 +2,15 @@ package com.budgetyoufool.model.transaction;
 
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
-@Entity
+@Document
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
@@ -18,14 +18,13 @@ import java.time.LocalDate;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private String id;
     @NonNull
     private BigDecimal amount;
     @NonNull
     private String description;
     @NonNull
-    private LocalDate date;
+    private Date date;
 
 
 }

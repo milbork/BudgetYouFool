@@ -6,17 +6,16 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
+@Data
 @NoArgsConstructor
-@RequiredArgsConstructor
-@Getter
-@Setter
 public class IncomeDTO extends Transaction {
 
     @NonNull
     private IncomeTypeEnum incomeTypeEnum;
 
-    public IncomeDTO(@NonNull BigDecimal amount, @NonNull String description, @NonNull LocalDate date, IncomeTypeEnum incomeTypeEnum) {
+    public IncomeDTO(@NonNull BigDecimal amount, @NonNull String description, @NonNull Date date, IncomeTypeEnum incomeTypeEnum) {
         super(amount, description, date);
         this.incomeTypeEnum = incomeTypeEnum;
     }
