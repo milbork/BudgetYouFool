@@ -1,28 +1,26 @@
 package com.budgetyoufool.model.DTO.transaction;
 
+import com.budgetyoufool.model.transaction.IncomeTypeEnum;
+import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
 public class TransactionDTO {
 
+    private Long id;
 
-    private String id;
+    private IncomeTypeEnum incomeTypeEnum;
 
+    private OutcomeTypeEnum outcomeTypeEnum;
     @NonNull
     private BigDecimal amount;
     @NonNull
     private String description;
     @NonNull
-    private Date date;
-
-    public TransactionDTO(BigDecimal amount, String description, Date date){
-        this.amount = amount;
-        this.description = description;
-        this.date = date;
-    }
+    private LocalDate date;
 }

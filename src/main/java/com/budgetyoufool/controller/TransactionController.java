@@ -1,7 +1,7 @@
 package com.budgetyoufool.controller;
 
-import com.budgetyoufool.model.DTO.transaction.IncomeDTO;
-import com.budgetyoufool.model.DTO.transaction.OutcomeDTO;
+import com.budgetyoufool.model.DTO.transaction.TransactionDTO;
+import com.budgetyoufool.service.timeRange.TimeRangeServiceImpl;
 import com.budgetyoufool.service.transaction.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
 @Controller
 @RequestMapping("/")
 public class TransactionController {
@@ -25,8 +24,6 @@ public class TransactionController {
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
-
-
 
     @GetMapping(value = "/addTransaction/income")
     public ResponseEntity<String> addIncome() {
@@ -41,12 +38,12 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/addTransaction/income", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IncomeDTO> addIncome(@RequestBody IncomeDTO income) throws URISyntaxException {
+    public ResponseEntity<TransactionDTO> addIncome(@RequestBody TransactionDTO transactionDTO) throws URISyntaxException {
 
-        IncomeDTO transfer = transactionService.createIncome(income);
+        TransactionDTO transfer = transactionService.createTransaction(transactionDTO);
 
         return ResponseEntity
-                .created(new URI(String.format("/addTransaction/income/%s", transfer.getId())))
+                .created(new URI(String.format("/addTransaction/income/%d", transfer.getId())))
                 .body(transfer);
     }
 
@@ -62,12 +59,12 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/addTransaction/outcome", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OutcomeDTO> addOutcome(@RequestBody OutcomeDTO outcome) throws URISyntaxException {
+    public ResponseEntity<TransactionDTO> addOutcome(@RequestBody TransactionDTO transaction) throws URISyntaxException {
 
-        OutcomeDTO transfer = transactionService.createOutcome(outcome);
+        TransactionDTO transfer = transactionService.createTransaction(transaction);
 
         return ResponseEntity
-                .created(new URI(String.format("/addTransaction/outcome/%s", transfer.getId())))
+                .created(new URI(String.format("/addTransaction/outcome/%d", transfer.getId())))
                 .body(transfer);
     }
 }

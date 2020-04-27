@@ -1,11 +1,9 @@
 package com.budgetyoufool.service.transaction;
 
-import com.budgetyoufool.model.DTO.transaction.IncomeDTO;
-import com.budgetyoufool.model.DTO.transaction.OutcomeDTO;
-import com.budgetyoufool.model.transaction.income.Income;
-import com.budgetyoufool.model.transaction.outcome.Outcome;
-import com.budgetyoufool.repository.IncomeRepo;
-import com.budgetyoufool.repository.OutcomeRepo;
+import com.budgetyoufool.model.DTO.transaction.TransactionDTO;
+import com.budgetyoufool.model.transaction.Transaction;
+
+import com.budgetyoufool.repository.TransactionRepo;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +12,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final OutcomeRepo outcomeRepo;
-    private final IncomeRepo incomeRepo;
+    private final TransactionRepo transactionRepo;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public TransactionServiceImpl(OutcomeRepo outcomeRepo, IncomeRepo incomeRepo) {
-        this.outcomeRepo = outcomeRepo;
-        this.incomeRepo = incomeRepo;
+    public TransactionServiceImpl(TransactionRepo transactionRepo) {
+        this.transactionRepo = transactionRepo;
     }
 
     @Override
-    public IncomeDTO createIncome(IncomeDTO incomeDTO) {
-        System.out.println(incomeDTO.getId());
-        Income income = modelMapper.map(incomeDTO, Income.class);
-        Income save = incomeRepo.save(income);
+    public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
 
-        return modelMapper.map(save, IncomeDTO.class);
-    }
-    @Override
-    public OutcomeDTO createOutcome(OutcomeDTO outcomeDTO) {
+        Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
+        Transaction save = transactionRepo.save(transaction);
 
-        Outcome outcome = modelMapper.map(outcomeDTO, Outcome.class);
-        Outcome save = outcomeRepo.save(outcome);
-
-        return modelMapper.map(save, OutcomeDTO.class);
+        return modelMapper.map(save, TransactionDTO.class);
     }
 
     public void readTransaction() {

@@ -1,13 +1,14 @@
 package com.budgetyoufool.service.transaction;
 
-import com.budgetyoufool.model.DTO.transaction.IncomeDTO;
-import com.budgetyoufool.model.DTO.transaction.OutcomeDTO;
+import com.budgetyoufool.model.DTO.transaction.TransactionDTO;
 
 public interface TransactionService {
-    IncomeDTO createIncome(IncomeDTO incomeDTO);
-    OutcomeDTO createOutcome(OutcomeDTO dto);
+
+    TransactionDTO createTransaction(TransactionDTO transactionDTO);
+
 //    void readTransaction();
 //    void updateTransaction();
 //    void deleteTransaction();
+
 
 }

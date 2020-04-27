@@ -1,30 +1,32 @@
 package com.budgetyoufool.model.transaction;
 
-
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
-@Document
+@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Getter
-@Setter
+@Data
 public class Transaction {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
     @NonNull
     private BigDecimal amount;
     @NonNull
     private String description;
     @NonNull
-    private Date date;
+    private LocalDate date;
 
+    private OutcomeTypeEnum outcomeTypeEnum;
 
+    private IncomeTypeEnum incomeTypeEnum;
 }

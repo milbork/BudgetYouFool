@@ -1,4 +1,4 @@
-package com.budgetyoufool.model.transaction.outcome;
+package com.budgetyoufool.model.transaction;
 
 public enum OutcomeTypeEnum {
 
