@@ -1,4 +1,4 @@
-package com.budgetyoufool.model.DTO.transaction;
+package com.budgetyoufool.model.DTO;
 
 import com.budgetyoufool.model.transaction.IncomeTypeEnum;
 import com.budgetyoufool.model.transaction.OutcomeTypeEnum;

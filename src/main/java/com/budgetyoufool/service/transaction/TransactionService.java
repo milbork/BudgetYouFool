@@ -1,6 +1,6 @@
 package com.budgetyoufool.service.transaction;
 
-import com.budgetyoufool.model.DTO.transaction.TransactionDTO;
+import com.budgetyoufool.model.DTO.TransactionDTO;
 
 public interface TransactionService {
 

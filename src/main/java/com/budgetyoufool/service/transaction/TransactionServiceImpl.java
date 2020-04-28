@@ -1,8 +1,7 @@
 package com.budgetyoufool.service.transaction;
 
-import com.budgetyoufool.model.DTO.transaction.TransactionDTO;
+import com.budgetyoufool.model.DTO.TransactionDTO;
 import com.budgetyoufool.model.transaction.Transaction;
-
 import com.budgetyoufool.repository.TransactionRepo;
 
 import org.modelmapper.ModelMapper;

@@ -54,6 +54,18 @@ public class TimeRangeServiceImpl implements TimeRangeService {
         return getIncomeAndOutcomeInTimeRange(startDate, endDate);
     }
 
+    @Override
+    public List<Transaction> getTransactionsListByDate(LocalDate date) {
+
+        return transactionRepo.findAllByDateEquals(date);
+    }
+
+    @Override
+    public List<Transaction> getTransactionsListByTimeRange(LocalDate start, LocalDate end) {
+
+        return transactionRepo.findAllByDateBetween(start, end);
+    }
+
     private BigDecimal addTransactions(List<Transaction> list) {
 
         return list.stream()
@@ -63,7 +75,7 @@ public class TimeRangeServiceImpl implements TimeRangeService {
 
     private List<Transaction> getListOfIncomesInTimeRange(LocalDate startDate, LocalDate endDate) {
 
-        return transactionRepo.findAllByDateBetween(startDate.minusDays(1L), endDate.plusDays(1L))
+        return transactionRepo.findAllByDateBetween(startDate, endDate)
                 .stream()
                 .filter(t -> t.getIncomeTypeEnum() != null)
                 .collect(Collectors.toList()
@@ -72,14 +84,14 @@ public class TimeRangeServiceImpl implements TimeRangeService {
 
     private List<Transaction> getListOfOutcomesInTimeRange(LocalDate startDate, LocalDate endDate) {
 
-        return transactionRepo.findAllByDateBetween(startDate.minusDays(1L), endDate.plusDays(1L))
+        return transactionRepo.findAllByDateBetween(startDate, endDate)
                 .stream()
                 .filter(t -> t.getOutcomeTypeEnum() != null)
                 .collect(Collectors.toList()
                 );
     }
 
-    private List<BigDecimal> getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate){
+    private List<BigDecimal> getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate) {
 
         List<Transaction> incomeByMonth = getListOfIncomesInTimeRange(startDate, endDate);
         List<Transaction> outcomeByMonth = getListOfOutcomesInTimeRange(startDate, endDate);
@@ -90,4 +102,4 @@ public class TimeRangeServiceImpl implements TimeRangeService {
 
         return result;
     }
- }
+}
