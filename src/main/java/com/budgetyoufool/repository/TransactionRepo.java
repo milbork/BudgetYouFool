@@ -12,7 +12,10 @@ import java.util.List;
 public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 
     List<Transaction> findAllByDateAndIncomeTypeEnumNotNull(LocalDate date);
+
     List<Transaction> findAllByDateAndOutcomeTypeEnumNotNull(LocalDate date);
+
     List<Transaction> findAllByDateBetween(LocalDate start, LocalDate end);
+
     List<Transaction> findAllByDateEquals(LocalDate date);
 }

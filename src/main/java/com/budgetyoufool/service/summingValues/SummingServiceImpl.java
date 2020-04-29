@@ -1,7 +1,8 @@
-package com.budgetyoufool.service.timeRange;
+package com.budgetyoufool.service.summingValues;
 
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
+import com.budgetyoufool.service.grupingTransactions.GroupingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,17 +10,19 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class TimeRangeServiceImpl implements TimeRangeService {
+public class SummingServiceImpl implements SummingService {
 
-    private final TransactionRepo transactionRepo;
+    TransactionRepo transactionRepo;
+    GroupingService groupingService;
 
     @Autowired
-    public TimeRangeServiceImpl(TransactionRepo transactionRepo) {
+    public SummingServiceImpl(TransactionRepo transactionRepo, GroupingService groupingService) {
         this.transactionRepo = transactionRepo;
+        this.groupingService = groupingService;
     }
+
 
     @Override
     public List<BigDecimal> showSumOfDailyTransactions(LocalDate date) {
@@ -54,18 +57,6 @@ public class TimeRangeServiceImpl implements TimeRangeService {
         return getIncomeAndOutcomeInTimeRange(startDate, endDate);
     }
 
-    @Override
-    public List<Transaction> getTransactionsListByDate(LocalDate date) {
-
-        return transactionRepo.findAllByDateEquals(date);
-    }
-
-    @Override
-    public List<Transaction> getTransactionsListByTimeRange(LocalDate start, LocalDate end) {
-
-        return transactionRepo.findAllByDateBetween(start, end);
-    }
-
     private BigDecimal addTransactions(List<Transaction> list) {
 
         return list.stream()
@@ -73,33 +64,17 @@ public class TimeRangeServiceImpl implements TimeRangeService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<Transaction> getListOfIncomesInTimeRange(LocalDate startDate, LocalDate endDate) {
-
-        return transactionRepo.findAllByDateBetween(startDate, endDate)
-                .stream()
-                .filter(t -> t.getIncomeTypeEnum() != null)
-                .collect(Collectors.toList()
-                );
-    }
-
-    private List<Transaction> getListOfOutcomesInTimeRange(LocalDate startDate, LocalDate endDate) {
-
-        return transactionRepo.findAllByDateBetween(startDate, endDate)
-                .stream()
-                .filter(t -> t.getOutcomeTypeEnum() != null)
-                .collect(Collectors.toList()
-                );
-    }
-
     private List<BigDecimal> getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate) {
 
-        List<Transaction> incomeByMonth = getListOfIncomesInTimeRange(startDate, endDate);
-        List<Transaction> outcomeByMonth = getListOfOutcomesInTimeRange(startDate, endDate);
+        List<Transaction> incomeByMonth = groupingService.getListOfIncomesInTimeRange(startDate, endDate);
+        List<Transaction> outcomeByMonth = groupingService.getListOfOutcomesInTimeRange(startDate, endDate);
 
-        ArrayList<BigDecimal> result = new ArrayList<>();
+        List<BigDecimal> result = new ArrayList<>();
         result.add(addTransactions(incomeByMonth));
         result.add(addTransactions(outcomeByMonth));
 
         return result;
     }
+
+
 }
