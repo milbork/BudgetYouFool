@@ -1,5 +1,6 @@
 package com.budgetyoufool.service.summingValues;
 
+import com.budgetyoufool.model.DTO.TimeRangeDTO;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
@@ -25,7 +26,7 @@ public class SummingServiceImpl implements SummingService {
 
 
     @Override
-    public List<BigDecimal> showSumOfDailyTransactions(LocalDate date) {
+    public List<BigDecimal> sumDailyTransactions(LocalDate date) {
 
         List<BigDecimal> result = new ArrayList<>(2);
 
@@ -38,7 +39,7 @@ public class SummingServiceImpl implements SummingService {
     }
 
     @Override
-    public List<BigDecimal> showSumOfMonthlyTransactions(LocalDate date) {
+    public List<BigDecimal> sumOfMonthlyTransactions(LocalDate date) {
 
         int start = 1;
         int end = date.lengthOfMonth();
@@ -52,9 +53,9 @@ public class SummingServiceImpl implements SummingService {
     }
 
     @Override
-    public List<BigDecimal> showSumOfTransactionsInTimeRange(LocalDate startDate, LocalDate endDate) {
+    public List<BigDecimal> sumOfTransactionsInTimeRange(TimeRangeDTO date) {
 
-        return getIncomeAndOutcomeInTimeRange(startDate, endDate);
+        return getIncomeAndOutcomeInTimeRange(date.getStart(), date.getEnd());
     }
 
     private BigDecimal addTransactions(List<Transaction> list) {
@@ -66,12 +67,12 @@ public class SummingServiceImpl implements SummingService {
 
     private List<BigDecimal> getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate) {
 
-        List<Transaction> incomeByMonth = groupingService.getListOfIncomesInTimeRange(startDate, endDate);
-        List<Transaction> outcomeByMonth = groupingService.getListOfOutcomesInTimeRange(startDate, endDate);
+        List<Transaction> income = groupingService.getListOfIncomesInTimeRange(startDate, endDate);
+        List<Transaction> outcome = groupingService.getListOfOutcomesInTimeRange(startDate, endDate);
 
         List<BigDecimal> result = new ArrayList<>();
-        result.add(addTransactions(incomeByMonth));
-        result.add(addTransactions(outcomeByMonth));
+        result.add(addTransactions(income));
+        result.add(addTransactions(outcome));
 
         return result;
     }

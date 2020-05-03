@@ -13,12 +13,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-public class TransactionsDisplayController {
+public class DisplayTransactionsController {
 
     private final GroupingService groupingService;
 
     @Autowired
-    public TransactionsDisplayController(GroupingService groupingService) {
+    public DisplayTransactionsController(GroupingService groupingService) {
         this.groupingService = groupingService;
     }
 
