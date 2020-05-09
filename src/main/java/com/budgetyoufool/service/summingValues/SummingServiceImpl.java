@@ -1,24 +1,24 @@
 package com.budgetyoufool.service.summingValues;
 
-import com.budgetyoufool.model.DTO.TimeRangeDTO;
+import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "SummingCache")
 public class SummingServiceImpl implements SummingService {
 
-    TransactionRepo transactionRepo;
-    GroupingService groupingService;
+    private final TransactionRepo transactionRepo;
+    private final GroupingService groupingService;
 
-    @Autowired
     public SummingServiceImpl(TransactionRepo transactionRepo, GroupingService groupingService) {
         this.transactionRepo = transactionRepo;
         this.groupingService = groupingService;
@@ -26,20 +26,20 @@ public class SummingServiceImpl implements SummingService {
 
 
     @Override
-    public List<BigDecimal> sumDailyTransactions(LocalDate date) {
+    public TransactionSummingDTO sumDailyTransactions(LocalDate date) {
 
-        List<BigDecimal> result = new ArrayList<>(2);
+        TransactionSummingDTO result = new TransactionSummingDTO();
 
-        BigDecimal incomeByDay = addTransactions(transactionRepo.findAllByDateAndIncomeTypeEnumNotNull(date));
-        BigDecimal outcomeByDay = addTransactions(transactionRepo.findAllByDateAndOutcomeTypeEnumNotNull(date));
-        result.add(incomeByDay);
-        result.add(outcomeByDay);
+        result.setIncome(
+                addTransactions(transactionRepo.findAllByDateAndIncomeTypeEnumNotNull(date)));
+        result.setOutcome(
+                addTransactions(transactionRepo.findAllByDateAndOutcomeTypeEnumNotNull(date)));
 
         return result;
     }
 
     @Override
-    public List<BigDecimal> sumOfMonthlyTransactions(LocalDate date) {
+    public TransactionSummingDTO sumOfMonthlyTransactions(LocalDate date) {
 
         int start = 1;
         int end = date.lengthOfMonth();
@@ -53,9 +53,9 @@ public class SummingServiceImpl implements SummingService {
     }
 
     @Override
-    public List<BigDecimal> sumOfTransactionsInTimeRange(TimeRangeDTO date) {
+    public TransactionSummingDTO sumOfTransactionsInTimeRange(LocalDate start, LocalDate end) {
 
-        return getIncomeAndOutcomeInTimeRange(date.getStart(), date.getEnd());
+        return getIncomeAndOutcomeInTimeRange(start, end);
     }
 
     private BigDecimal addTransactions(List<Transaction> list) {
@@ -65,14 +65,14 @@ public class SummingServiceImpl implements SummingService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<BigDecimal> getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate) {
+    private TransactionSummingDTO getIncomeAndOutcomeInTimeRange(LocalDate startDate, LocalDate endDate) {
 
         List<Transaction> income = groupingService.getListOfIncomesInTimeRange(startDate, endDate);
         List<Transaction> outcome = groupingService.getListOfOutcomesInTimeRange(startDate, endDate);
 
-        List<BigDecimal> result = new ArrayList<>();
-        result.add(addTransactions(income));
-        result.add(addTransactions(outcome));
+        TransactionSummingDTO result = new TransactionSummingDTO();
+        result.setIncome(addTransactions(income));
+        result.setOutcome(addTransactions(outcome));
 
         return result;
     }

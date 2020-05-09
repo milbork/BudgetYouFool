@@ -1,17 +1,14 @@
 package com.budgetyoufool.service.summingValues;
 
-import com.budgetyoufool.model.DTO.TimeRangeDTO;
-
-import java.math.BigDecimal;
+import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import java.time.LocalDate;
-import java.util.List;
 
 public interface SummingService {
 
-    List<BigDecimal> sumDailyTransactions(LocalDate date);
+    TransactionSummingDTO sumDailyTransactions(LocalDate date);
 
-    List<BigDecimal> sumOfMonthlyTransactions(LocalDate date);
+    TransactionSummingDTO sumOfMonthlyTransactions(LocalDate date);
 
-    List<BigDecimal> sumOfTransactionsInTimeRange(TimeRangeDTO date);
+    TransactionSummingDTO sumOfTransactionsInTimeRange(LocalDate start, LocalDate end);
 
 }

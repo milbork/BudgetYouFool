@@ -3,15 +3,15 @@ package com.budgetyoufool.service.grupingTransactions;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@CacheConfig(cacheNames = "TransactionCache")
 public class GroupingServiceImpl implements GroupingService {
 
     private final TransactionRepo transactionRepo;

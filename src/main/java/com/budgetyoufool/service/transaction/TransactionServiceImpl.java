@@ -5,7 +5,6 @@ import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +13,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepo transactionRepo;
     private final ModelMapper modelMapper = new ModelMapper();
 
-    @Autowired
     public TransactionServiceImpl(TransactionRepo transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
