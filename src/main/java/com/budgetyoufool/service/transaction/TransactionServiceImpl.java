@@ -7,6 +7,8 @@ import com.budgetyoufool.repository.TransactionRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -27,7 +29,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public void readTransaction() {
-
     }
 
     public void updateTransaction() {

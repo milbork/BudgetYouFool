@@ -1,5 +1,6 @@
 package com.budgetyoufool.controller;
 
+import com.budgetyoufool.exceptions.DateException;
 import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.service.summingValues.SummingService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/sum")
@@ -21,8 +23,11 @@ public class SummingTransactionsController {
 
     @GetMapping(value = "/daily")
     public ResponseEntity<TransactionSummingDTO> showSumOfDailyTransactions(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
-        return ResponseEntity.ok(summingService.sumDailyTransactions(date));
+        if (date.isAfter(LocalDate.now())) {
+            throw new DateException();
+        } else {
+            return ResponseEntity.ok(summingService.sumDailyTransactions(date));
+        }
     }
 
     @GetMapping(value = "/monthly")
