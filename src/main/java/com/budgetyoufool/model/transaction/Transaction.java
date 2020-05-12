@@ -12,18 +12,17 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Data
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    @NonNull
+
     private BigDecimal amount;
-    @NonNull
+
     private String description;
-    @NonNull
+
     private LocalDate date;
 
     private OutcomeTypeEnum outcomeTypeEnum;

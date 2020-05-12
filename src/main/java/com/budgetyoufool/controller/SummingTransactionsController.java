@@ -1,6 +1,7 @@
 package com.budgetyoufool.controller;
 
-import com.budgetyoufool.exceptions.DateException;
+import com.budgetyoufool.exception.exceptions.DateException;
+import com.budgetyoufool.exception.exceptions.DateMismatchException;
 import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.service.summingValues.SummingService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/sum")
@@ -40,7 +40,12 @@ public class SummingTransactionsController {
     public ResponseEntity<TransactionSummingDTO> showSumOfTransactionsInTimeRange(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
                                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
 
-
-        return ResponseEntity.ok(summingService.sumOfTransactionsInTimeRange(start, end));
+        if (start.isAfter(LocalDate.now()) || end.isAfter(LocalDate.now())) {
+            throw new DateException();
+        } else if (start.isAfter(end)) {
+            throw new DateMismatchException();
+        } else {
+            return ResponseEntity.ok(summingService.sumOfTransactionsInTimeRange(start, end));
+        }
     }
 }

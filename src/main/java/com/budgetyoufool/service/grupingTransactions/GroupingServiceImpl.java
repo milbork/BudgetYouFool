@@ -2,7 +2,6 @@ package com.budgetyoufool.service.grupingTransactions;
 
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ public class GroupingServiceImpl implements GroupingService {
 
     private final TransactionRepo transactionRepo;
 
-    @Autowired
     public GroupingServiceImpl(TransactionRepo transactionRepo) {
         this.transactionRepo = transactionRepo;
     }

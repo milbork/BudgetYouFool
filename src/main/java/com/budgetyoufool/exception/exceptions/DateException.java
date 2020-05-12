@@ -1,4 +1,6 @@
-package com.budgetyoufool.exceptions;
+package com.budgetyoufool.exception.exceptions;
+
+import java.io.PrintStream;
 
 public class DateException extends IllegalArgumentException {
 

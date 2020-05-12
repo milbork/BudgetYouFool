@@ -1,5 +1,7 @@
 package com.budgetyoufool.controller;
 
+import com.budgetyoufool.exception.exceptions.DateException;
+import com.budgetyoufool.exception.exceptions.DateMismatchException;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,26 +24,29 @@ public class DisplayTransactionsController {
 
     @GetMapping("/daily")
     public ResponseEntity<List<Transaction>> showListOfTransactionsByDay(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
-        List<Transaction> transactions = groupingService.getTransactionsListByDate(date);
-
-        return ResponseEntity.ok(transactions);
+        if (date.isAfter(LocalDate.now())) {
+            throw new DateException();
+        } else {
+            return ResponseEntity.ok(groupingService.getTransactionsListByDate(date));
+        }
     }
 
     @GetMapping("/monthly")
     public ResponseEntity<List<Transaction>> showListOfTransactionsByMonth(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        List<Transaction> transactions = groupingService.getTransactionsListByMonth(date);
-
-        return ResponseEntity.ok(transactions);
+        return ResponseEntity.ok(groupingService.getTransactionsListByMonth(date));
     }
 
     @GetMapping("/inTimeRange")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByTimeRange(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate start,
-                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate end) {
+    public ResponseEntity<List<Transaction>> showListOfTransactionsByTimeRange(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+        if (start.isAfter(LocalDate.now()) || end.isAfter(LocalDate.now())) {
+            throw new DateException();
+        } else if (start.isAfter(end)) {
+            throw new DateMismatchException();
+        } else {
 
-        List<Transaction> transactions = groupingService.getTransactionsListByTimeRange(start, end);
-
-        return ResponseEntity.ok(transactions);
+            return ResponseEntity.ok(groupingService.getTransactionsListByTimeRange(start, end));
+        }
     }
 }

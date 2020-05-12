@@ -6,7 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -17,10 +18,10 @@ public class TransactionDTO {
     private IncomeTypeEnum incomeTypeEnum;
 
     private OutcomeTypeEnum outcomeTypeEnum;
-    @NonNull
+    @NotNull(message = "Transaction must contains amount!")
     private BigDecimal amount;
-    @NonNull
+    @NotBlank(message = "Transaction must contains description")
     private String description;
-    @NonNull
+    @NotNull(message = "Transaction must contains date")
     private LocalDate date;
 }
