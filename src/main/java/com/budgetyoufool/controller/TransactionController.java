@@ -29,7 +29,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping(path = "/transactions")
+    @GetMapping(path = "/transactions/income")
     public ResponseEntity<String> addIncome() {
 
         HttpHeaders headers = new HttpHeaders();
@@ -41,7 +41,7 @@ public class TransactionController {
                 .body("Set new income");
     }
 
-    @PostMapping(path = "/transactions")
+    @PostMapping(path = "/transactions/income")
     public ResponseEntity<TransactionDTO> addIncome(@RequestBody @Valid TransactionDTO transactionDTO) {
 
         TransactionDTO transfer = transactionService.createTransaction(transactionDTO);
@@ -58,7 +58,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping(path = "/transactions")
+    @GetMapping(path = "/transactions/outcome")
     public ResponseEntity<String> addOutcome() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("responded", "MyController");
@@ -68,7 +68,7 @@ public class TransactionController {
                 .body("Set new outcome");
     }
 
-    @PostMapping(path = "/transactions")
+    @PostMapping(path = "/transactions/outcome")
     public ResponseEntity<TransactionDTO> addOutcome(@RequestBody @Valid TransactionDTO transaction) {
 
         TransactionDTO transfer = transactionService.createTransaction(transaction);
@@ -107,12 +107,13 @@ public class TransactionController {
 
     @DeleteMapping(path = "/transactions/{id}")
     public ResponseEntity<String> deleteTransaction(@PathVariable @NotNull @Valid Long id) {
+
         if (!transactionService.deleteTransaction(id)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body("Transaction removed");
         } else {
-            throw new OperationFailedException(NAME, LocalDateTime.now());
+            throw new OperationFailedException(NAME);
         }
     }
 }
