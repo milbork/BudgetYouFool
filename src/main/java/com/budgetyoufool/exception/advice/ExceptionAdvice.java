@@ -42,4 +42,12 @@ public class ExceptionAdvice {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(TransactionTypeException .class)
+    public ResponseEntity<String> TransactionTypeHandler(TransactionTypeException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
 }

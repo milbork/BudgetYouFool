@@ -1,6 +1,7 @@
 package com.budgetyoufool.controller;
 
 import com.budgetyoufool.exception.exceptions.OperationFailedException;
+import com.budgetyoufool.exception.exceptions.TransactionTypeException;
 import com.budgetyoufool.exception.exceptions.URIResponseException;
 import com.budgetyoufool.model.DTO.TransactionDTO;
 import com.budgetyoufool.service.transaction.TransactionService;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/")
@@ -29,8 +29,8 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping(path = "/transactions/income")
-    public ResponseEntity<String> addIncome() {
+    @GetMapping(path = "/transactions")
+    public ResponseEntity<String> addTransaction() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("responded", "MyController");
@@ -38,50 +38,30 @@ public class TransactionController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .headers(headers)
-                .body("Set new income");
+                .body("Add new transaction");
     }
 
-    @PostMapping(path = "/transactions/income")
-    public ResponseEntity<TransactionDTO> addIncome(@RequestBody @Valid TransactionDTO transactionDTO) {
+    @PostMapping(path = "/transactions")
+    public ResponseEntity<TransactionDTO> addTransaction(@RequestBody @Valid TransactionDTO transactionDTO) {
 
-        TransactionDTO transfer = transactionService.createTransaction(transactionDTO);
+        if (transactionDTO.getIncomeTypeEnum() != null && transactionDTO.getOutcomeTypeEnum() == null
+                || transactionDTO.getIncomeTypeEnum() == null && transactionDTO.getOutcomeTypeEnum() != null) {
 
-        try {
-            URI uri = new URI(String.format("/transactions/income/%d", transfer.getId()));
+            TransactionDTO transfer = transactionService.createTransaction(transactionDTO);
 
-            return ResponseEntity
-                    .created(uri)
-                    .body(transfer);
+            try {
+                URI uri = new URI(String.format("/transactions/%d", transfer.getId()));
 
-        } catch (URISyntaxException ex) {
-            throw new URIResponseException(ex.toString());
-        }
-    }
+                return ResponseEntity
+                        .created(uri)
+                        .body(transfer);
 
-    @GetMapping(path = "/transactions/outcome")
-    public ResponseEntity<String> addOutcome() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("responded", "MyController");
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .body("Set new outcome");
-    }
+            } catch (URISyntaxException ex) {
+                throw new URIResponseException(ex.toString());
+            }
 
-    @PostMapping(path = "/transactions/outcome")
-    public ResponseEntity<TransactionDTO> addOutcome(@RequestBody @Valid TransactionDTO transaction) {
-
-        TransactionDTO transfer = transactionService.createTransaction(transaction);
-
-        try {
-            URI uri = new URI(String.format("/transactions/%d", transfer.getId()));
-
-            return ResponseEntity
-                    .created(uri)
-                    .body(transfer);
-
-        } catch (URISyntaxException ex) {
-            throw new URIResponseException(ex.toString());
+        } else {
+            throw new TransactionTypeException();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.budgetyoufool.exception.exceptions;
 
-import java.time.LocalDateTime;
 
 public class OperationFailedException extends RuntimeException {
 
