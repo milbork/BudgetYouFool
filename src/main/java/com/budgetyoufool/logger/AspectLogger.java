@@ -18,15 +18,13 @@ public class AspectLogger {
             " || within(@org.springframework.stereotype.Service *)" +
             " || within(@org.springframework.web.bind.annotation.RestController *)")
     public void springBeanPointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
     @Pointcut("within(com.budgetyoufool..*)" +
             " || within(com.budgetyoufool.controller..*)" +
-            " || within(com.budgetyoufool.service..*)"+
+            " || within(com.budgetyoufool.service..*)" +
             " || within(com.budgetyoufool.repository..*)")
     public void applicationPackagePointcut() {
-        // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
 
 
