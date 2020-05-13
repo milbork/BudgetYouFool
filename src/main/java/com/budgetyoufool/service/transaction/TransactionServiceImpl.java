@@ -21,12 +21,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDTO createTransaction(TransactionDTO transactionDTO) {
 
-
         Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
         Transaction save = transactionRepo.save(transaction);
+
         return modelMapper.map(save, TransactionDTO.class);
-
-
     }
 
     @Override
@@ -41,21 +39,21 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void updateTransaction(TransactionDTO transactionDTO) {
 
-
         transactionRepo
                 .findById(transactionDTO.getId())
                 .orElseThrow(NoSuchTransactionException::new);
 
         Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
         transactionRepo.save(transaction);
-
-
     }
 
     @Override
     public boolean deleteTransaction(Long id) {
 
-        transactionRepo.findById(id).orElseThrow(NoSuchTransactionException::new);
+        transactionRepo
+                .findById(id)
+                .orElseThrow(NoSuchTransactionException::new);
+
         transactionRepo.deleteById(id);
 
         return transactionRepo.existsById(id);

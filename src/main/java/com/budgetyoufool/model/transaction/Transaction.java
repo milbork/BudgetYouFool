@@ -11,8 +11,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@Setter
+@Getter
 public class Transaction {
 
     @Id
@@ -28,4 +30,11 @@ public class Transaction {
     private OutcomeTypeEnum outcomeTypeEnum;
 
     private IncomeTypeEnum incomeTypeEnum;
+
+    public Transaction( BigDecimal amount, String description, LocalDate date) {
+
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+    }
 }
