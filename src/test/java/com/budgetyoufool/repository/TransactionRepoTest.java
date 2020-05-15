@@ -1,14 +1,13 @@
 package com.budgetyoufool.repository;
 
 import com.budgetyoufool.BYFApplication;
-import com.budgetyoufool.model.transaction.IncomeTypeEnum;
-import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import com.budgetyoufool.model.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -22,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = BYFApplication.class)
 @AutoConfigureTestEntityManager
 @Transactional
+@ActiveProfiles("test")
 class TransactionRepoTest {
 
     @Autowired
@@ -49,7 +49,7 @@ class TransactionRepoTest {
     @Test
     void shouldPassIfReturnsCorrectTransactionsInTimeRange() {
 
-        Transaction testTransaction = new Transaction(BigDecimal.valueOf(5), "snack", LocalDate.of(2020, Month.MARCH, 17));
+        Transaction testTransaction = new Transaction(BigDecimal.valueOf(5), "SNACK", LocalDate.of(2020, Month.MARCH, 17));
         entityManager.persistAndFlush(testTransaction);
         Transaction testTransaction1 = new Transaction(BigDecimal.valueOf(15), "snack", LocalDate.of(2020, Month.APRIL, 10));
         entityManager.persistAndFlush(testTransaction1);
@@ -57,7 +57,7 @@ class TransactionRepoTest {
         entityManager.persistAndFlush(testTransaction2);
         Transaction testTransaction3 = new Transaction(BigDecimal.valueOf(35), "snack", LocalDate.of(2020, Month.APRIL, 30));
         entityManager.persistAndFlush(testTransaction3);
-        Transaction testTransaction4 = new Transaction(BigDecimal.valueOf(45), "snack", LocalDate.of(2020, Month.MAY, 15));
+        Transaction testTransaction4 = new Transaction(BigDecimal.valueOf(45), "SNACK", LocalDate.of(2020, Month.MAY, 15));
         entityManager.persistAndFlush(testTransaction4);
 
         List<Transaction> transactions = new ArrayList<>();
@@ -68,6 +68,8 @@ class TransactionRepoTest {
         List<Transaction> found = this.transactionRepo.findAllByDateBetween(
                 LocalDate.of(2020, Month.MARCH, 31),
                 LocalDate.of(2020, Month.MAY, 1));
+
+        System.out.println(found.toString());
         assertThat(found).isEqualTo(transactions);
     }
 
