@@ -1,6 +1,8 @@
 package com.budgetyoufool.repository;
 
 import com.budgetyoufool.BYFApplication;
+import com.budgetyoufool.model.transaction.IncomeTypeEnum;
+import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import com.budgetyoufool.model.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(classes = BYFApplication.class)
 @AutoConfigureTestEntityManager
 @Transactional
@@ -62,8 +65,10 @@ class TransactionRepoTest {
         transactions.add(testTransaction2);
         transactions.add(testTransaction3);
 
-        List<Transaction> found = this.transactionRepo.findAllByDateBetween(LocalDate.of(2020, Month.MARCH, 31),
-                                                                            LocalDate.of(2020, Month.MAY, 1));
+        List<Transaction> found = this.transactionRepo.findAllByDateBetween(
+                LocalDate.of(2020, Month.MARCH, 31),
+                LocalDate.of(2020, Month.MAY, 1));
         assertThat(found).isEqualTo(transactions);
     }
+
 }

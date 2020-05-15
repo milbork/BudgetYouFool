@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepo transactionRepo;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
-    public TransactionServiceImpl(TransactionRepo transactionRepo) {
+    public TransactionServiceImpl(TransactionRepo transactionRepo, ModelMapper modelMapper) {
         this.transactionRepo = transactionRepo;
+        this.modelMapper = modelMapper;
     }
 
     @Override

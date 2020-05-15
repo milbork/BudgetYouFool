@@ -4,13 +4,13 @@ import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @CacheConfig(cacheNames = "SummingCache")
@@ -30,10 +30,21 @@ public class SummingServiceImpl implements SummingService {
 
         TransactionSummingDTO result = new TransactionSummingDTO();
 
-        result.setIncome(
-                addTransactions(transactionRepo.findAllByDateAndIncomeTypeEnumNotNull(date)));
-        result.setOutcome(
-                addTransactions(transactionRepo.findAllByDateAndOutcomeTypeEnumNotNull(date)));
+        result.setIncome(addTransactions(
+                transactionRepo
+                        .findAllByDateEquals(date)
+                        .stream()
+                        .filter(t -> t.getIncomeTypeEnum() != null)
+                        .collect(Collectors.toList()))
+        );
+
+        result.setOutcome(addTransactions(
+                transactionRepo
+                        .findAllByDateEquals(date)
+                        .stream()
+                        .filter(t -> t.getOutcomeTypeEnum() != null)
+                        .collect(Collectors.toList()))
+        );
 
         return result;
     }
@@ -71,11 +82,10 @@ public class SummingServiceImpl implements SummingService {
         List<Transaction> outcome = groupingService.getListOfOutcomesInTimeRange(startDate, endDate);
 
         TransactionSummingDTO result = new TransactionSummingDTO();
+
         result.setIncome(addTransactions(income));
         result.setOutcome(addTransactions(outcome));
 
         return result;
     }
-
-
 }

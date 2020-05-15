@@ -1,10 +1,10 @@
 package com.budgetyoufool;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
@@ -13,5 +13,10 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class BYFApplication {
     public static void main(String[] args) {
         SpringApplication.run(BYFApplication.class, args);
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

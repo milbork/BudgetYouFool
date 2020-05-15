@@ -31,10 +31,20 @@ public class Transaction {
 
     private IncomeTypeEnum incomeTypeEnum;
 
+    public Transaction( BigDecimal amount, String description, LocalDate date, OutcomeTypeEnum outcomeTypeEnum, IncomeTypeEnum incomeTypeEnum) {
+
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+        this.outcomeTypeEnum = outcomeTypeEnum;
+        this.incomeTypeEnum = incomeTypeEnum;
+    }
+
     public Transaction( BigDecimal amount, String description, LocalDate date) {
 
         this.amount = amount;
         this.description = description;
         this.date = date;
+
     }
 }
