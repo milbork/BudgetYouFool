@@ -10,6 +10,7 @@ import com.budgetyoufool.service.grupingTransactions.GroupingServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
@@ -22,8 +23,11 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+@ActiveProfiles("test")
 
 class SummingServiceTest {
+
+
 
     private SummingServiceImpl summingService;
     private TransactionRepo transactionRepo;
@@ -48,7 +52,7 @@ class SummingServiceTest {
                 .thenReturn(mockList);
 
         TransactionSummingDTO tsDTO = summingService.sumDailyTransactions(LocalDate.of(2020, Month.APRIL, 30));
-        System.out.println(tsDTO.toString());
+
         Assertions.assertTrue(tsDTO.getIncome().equals(BigDecimal.valueOf(25))
                 && tsDTO.getOutcome().equals(BigDecimal.valueOf(40))
         );
