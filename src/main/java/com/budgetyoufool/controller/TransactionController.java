@@ -9,7 +9,6 @@ import com.budgetyoufool.service.transaction.TransactionService;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,12 +31,8 @@ public class TransactionController {
     @GetMapping(path = "/transactions")
     public ResponseEntity<String> addTransaction() {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("responded", "MyController");
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .headers(headers)
                 .body("Add new transaction");
     }
 

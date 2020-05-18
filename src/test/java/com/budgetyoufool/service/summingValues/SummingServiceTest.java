@@ -5,14 +5,14 @@ import com.budgetyoufool.model.transaction.IncomeTypeEnum;
 import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
-import com.budgetyoufool.service.grupingTransactions.GroupingService;
 import com.budgetyoufool.service.grupingTransactions.GroupingServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,24 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-@ActiveProfiles("test")
 
+@ActiveProfiles("test")
+@SpringBootTest
 class SummingServiceTest {
 
-
-
     private SummingServiceImpl summingService;
-    private TransactionRepo transactionRepo;
+    @MockBean
+    private TransactionRepo repo;
+    @MockBean
     private GroupingServiceImpl groupingService;
 
     @BeforeEach
     void init() {
-        transactionRepo = mock(TransactionRepo.class);
-        groupingService = mock(GroupingServiceImpl.class);
-        summingService = new SummingServiceImpl(transactionRepo, groupingService);
+        summingService = new SummingServiceImpl(repo, groupingService);
     }
 
     @Test
@@ -48,7 +45,7 @@ class SummingServiceTest {
                 .filter(t -> t.getDate().equals(LocalDate.of(2020, Month.APRIL, 30)))
                 .collect(Collectors.toList());
 
-        when(transactionRepo.findAllByDateEquals(LocalDate.of(2020, Month.APRIL, 30)))
+        when(repo.findAllByDateEquals(LocalDate.of(2020, Month.APRIL, 30)))
                 .thenReturn(mockList);
 
         TransactionSummingDTO tsDTO = summingService.sumDailyTransactions(LocalDate.of(2020, Month.APRIL, 30));
@@ -63,7 +60,7 @@ class SummingServiceTest {
 
         List<Transaction> mockList = transactionListInit();
 
-        when(transactionRepo.findAllByDateBetween(
+        when(repo.findAllByDateBetween(
                 LocalDate.of(2020, Month.APRIL, 1),
                 LocalDate.of(2020, Month.APRIL, 30)))
                 .thenReturn(mockList);
@@ -95,7 +92,7 @@ class SummingServiceTest {
 
         List<Transaction> mockList = transactionListInit();
 
-        when(transactionRepo.findAllByDateBetween(
+        when(repo.findAllByDateBetween(
                 LocalDate.of(2020, Month.APRIL, 1),
                 LocalDate.of(2020, Month.APRIL, 30)))
                 .thenReturn(mockList);
