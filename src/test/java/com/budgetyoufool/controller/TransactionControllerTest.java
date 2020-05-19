@@ -35,7 +35,6 @@ class TransactionControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
     @MockBean
     private TransactionService service;
 
@@ -125,4 +124,5 @@ class TransactionControllerTest {
 
         return objectMapper.writeValueAsString(transactionDTO);
     }
+
 }

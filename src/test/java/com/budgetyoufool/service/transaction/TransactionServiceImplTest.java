@@ -42,5 +42,4 @@ class TransactionServiceImplTest {
                 () -> assertThrows(NoSuchTransactionException.class, () -> transactionService.updateTransaction(new TransactionDTO()))
         );
     }
-
 }

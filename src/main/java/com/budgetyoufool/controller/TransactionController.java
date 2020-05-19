@@ -1,5 +1,6 @@
 package com.budgetyoufool.controller;
 
+import com.budgetyoufool.exception.exceptions.DateException;
 import com.budgetyoufool.exception.exceptions.OperationFailedException;
 import com.budgetyoufool.exception.exceptions.TransactionTypeException;
 import com.budgetyoufool.exception.exceptions.URIResponseException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/")
@@ -39,7 +41,10 @@ public class TransactionController {
     @PostMapping(path = "/transactions")
     public ResponseEntity<TransactionDTO> addTransaction(@RequestBody @Valid TransactionDTO transactionDTO) {
 
-        if (transactionDTO.getIncomeTypeEnum() != null && transactionDTO.getOutcomeTypeEnum() == null
+        if (transactionDTO.getDate().isAfter(LocalDate.now())) {
+            throw new DateException();
+
+        } else if (transactionDTO.getIncomeTypeEnum() != null && transactionDTO.getOutcomeTypeEnum() == null
                 || transactionDTO.getIncomeTypeEnum() == null && transactionDTO.getOutcomeTypeEnum() != null) {
 
             TransactionDTO transfer = transactionService.createTransaction(transactionDTO);
@@ -72,12 +77,21 @@ public class TransactionController {
     public ResponseEntity<String> updateTransaction(@PathVariable @NotNull @Valid Long id,
                                                     @RequestBody TransactionDTO transactionDTO) {
 
-        transactionDTO.setId(id);
-        transactionService.updateTransaction(transactionDTO);
 
-        return ResponseEntity
-                .ok()
-                .body("Transaction successfully updated!");
+        if (transactionDTO.getDate().isAfter(LocalDate.now())) {
+            throw new DateException();
+
+        } else if (transactionDTO.getIncomeTypeEnum() != null && transactionDTO.getOutcomeTypeEnum() == null
+                || transactionDTO.getIncomeTypeEnum() == null && transactionDTO.getOutcomeTypeEnum() != null) {
+            transactionDTO.setId(id);
+            transactionService.updateTransaction(transactionDTO);
+
+            return ResponseEntity
+                    .ok()
+                    .body("Transaction successfully updated!");
+        } else {
+            throw new TransactionTypeException();
+        }
     }
 
     @DeleteMapping(path = "/transactions/{id}")

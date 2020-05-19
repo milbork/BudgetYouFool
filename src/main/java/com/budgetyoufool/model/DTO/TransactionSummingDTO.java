@@ -12,4 +12,9 @@ public class TransactionSummingDTO {
     BigDecimal income;
     BigDecimal outcome;
 
+    public TransactionSummingDTO(BigDecimal income, BigDecimal outcome) {
+        this.income = income;
+        this.outcome = outcome;
+    }
+
 }
