@@ -2,23 +2,19 @@ package com.budgetyoufool.controller;
 
 import com.budgetyoufool.BYFApplication;
 import com.budgetyoufool.model.DTO.TransactionDTO;
-import com.budgetyoufool.model.transaction.IncomeTypeEnum;
 import com.budgetyoufool.service.transaction.TransactionService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -26,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 
+import static com.budgetyoufool.model.transaction.IncomeTypeEnum.SALARY;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -43,7 +40,7 @@ class TransactionControllerTest {
     private TransactionService service;
 
     @Test
-    void addTransaction() throws Exception {
+    void addTransactionTest_GET() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders
                 .get("/transactions")
@@ -55,14 +52,28 @@ class TransactionControllerTest {
     }
 
     @Test
-    void testAddTransaction() {
+    void addTransactionTest_POST() throws Exception {
+
+        TransactionDTO transactionDTO = new TransactionDTO(1L, BigDecimal.valueOf(25), "snack",
+                LocalDate.of(2020, Month.APRIL, 13), null, SALARY);
+
+        when(service.createTransaction(transactionDTO)).thenReturn(transactionDTO);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(transactionDTO))
+                .characterEncoding("utf-8"))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.amount").value(25)
+                );
     }
 
     @Test
-    void readTransaction() throws Exception {
+    void readTransactionTest_GET() throws Exception {
 
         TransactionDTO transactionDTO = new TransactionDTO(1L, BigDecimal.valueOf(25), "snack",
-                LocalDate.of(2020, Month.APRIL, 13), null, IncomeTypeEnum.SALARY);
+                LocalDate.of(2020, Month.APRIL, 13), null, SALARY);
 
         when(service.showTransaction(1L)).thenReturn(transactionDTO);
 
@@ -79,10 +90,39 @@ class TransactionControllerTest {
     }
 
     @Test
-    void updateTransaction() {
+    void updateTransactionTest_PUT() throws Exception {
+
+        TransactionDTO transactionDTO = new TransactionDTO(null, BigDecimal.valueOf(25), "snack",
+                LocalDate.of(2020, Month.APRIL, 13), null, SALARY);
+
+        mvc.perform(MockMvcRequestBuilders
+                .put("/transactions/{id}", 1)
+                .content(asJsonString(transactionDTO))
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("Transaction successfully updated!")
+                );
     }
 
     @Test
-    void deleteTransaction() {
+    void deleteTransactionTest_DELETE() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/transactions/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Transaction removed")
+                );
+    }
+
+    private String asJsonString(TransactionDTO transactionDTO) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.registerModule(new JavaTimeModule());
+
+        return objectMapper.writeValueAsString(transactionDTO);
     }
 }
