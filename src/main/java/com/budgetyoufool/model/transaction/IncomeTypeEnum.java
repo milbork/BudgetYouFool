@@ -1,6 +1,6 @@
 package com.budgetyoufool.model.transaction;
 
-public enum IncomeTypeEnum {
+public enum IncomeTypeEnum  {
     SALARY,
     BONUS,
     SALE,

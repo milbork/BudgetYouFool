@@ -1,12 +1,9 @@
 package com.budgetyoufool.service.statistics;
 
-import com.budgetyoufool.model.DTO.TransactionDTO;
-
 import com.budgetyoufool.model.transaction.IncomeTypeEnum;
+import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import com.budgetyoufool.model.transaction.Transaction;
-import com.budgetyoufool.repository.TransactionRepo;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
-import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,22 +14,21 @@ import java.util.Map;
 
 
 @Service
-public class StatisticsServiceImpl implements StatisticsService{
+public class StatisticsServiceImpl implements StatisticsService {
 
-    private final TransactionRepo repository;
     private final GroupingService service;
 
-    StatisticsServiceImpl(TransactionRepo repository, GroupingService service){
-        this.repository = repository;
+    StatisticsServiceImpl(GroupingService service) {
         this.service = service;
     }
 
 
-    public Map<IncomeTypeEnum, BigDecimal> getIncomeStatsByDateAndType(LocalDate start, LocalDate end){
+    public Map<IncomeTypeEnum, BigDecimal> getIncomeStatsByDateAndType(LocalDate start, LocalDate end) {
 
         Map<IncomeTypeEnum, BigDecimal> incomeEnumMap = new HashMap<>();
 
-        for (IncomeTypeEnum e : IncomeTypeEnum.values()){
+        for (IncomeTypeEnum e : IncomeTypeEnum.values()) {
+
             BigDecimal incomeEnum = service.getListOfIncomesInTimeRange(start, end)
                     .stream()
                     .filter(t -> t.getIncomeTypeEnum().equals(e))
@@ -43,6 +39,24 @@ public class StatisticsServiceImpl implements StatisticsService{
         }
 
         return incomeEnumMap;
+    }
+
+    public Map<OutcomeTypeEnum, BigDecimal> getOutcomeStatsByDateAndType(LocalDate start, LocalDate end) {
+
+        Map<OutcomeTypeEnum, BigDecimal> outcomeEnumMap = new HashMap<>();
+
+        for (OutcomeTypeEnum e : OutcomeTypeEnum.values()) {
+
+            BigDecimal outcomeEnum = service.getListOfIncomesInTimeRange(start, end)
+                    .stream()
+                    .filter(t -> t.getOutcomeTypeEnum().equals(e))
+                    .map(Transaction::getAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            outcomeEnumMap.put(e, outcomeEnum);
+        }
+
+        return outcomeEnumMap;
     }
 
 }
