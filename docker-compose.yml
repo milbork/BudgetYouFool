@@ -3,19 +3,19 @@ services:
   byf:
     build: ./
     ports:
-    - "8080:8080"
+      - "8080:10101"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://databases:3300/BYF?autoReconnect=true&useSSL=false&serverTimezone=Europe/Warsaw
+      - SPRING_DATASOURCE_URL = jdbc:mysql://database:3306/BYF?useSSL=false&serverTimezone=UTC
     depends_on:
-      - databases
-  databases:
-    container_name: 'databases'
+      - database
+  database:
+    container_name: 'database'
     image: mysql
-    restart: always
     environment:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: BYF
-      MYSQL_USER: root
+      MYSQL_USER: user
     ports:
-    - "3300:3306"
+      - "3306:3306"
+    restart: always

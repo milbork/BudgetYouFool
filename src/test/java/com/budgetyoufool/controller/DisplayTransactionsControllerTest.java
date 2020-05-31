@@ -1,10 +1,8 @@
 package com.budgetyoufool.controller;
 
 import com.budgetyoufool.BYFApplication;
-import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
-import com.budgetyoufool.service.summingValues.SummingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,8 +20,6 @@ import java.util.List;
 
 import static com.budgetyoufool.model.transaction.IncomeTypeEnum.SALARY;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -71,7 +67,7 @@ class DisplayTransactionsControllerTest {
 
         when(service.getTransactionsListByTimeRange(LocalDate.of(2020, Month.APRIL, 13), LocalDate.of(2020, 5, 1)))
                 .thenReturn(transactionListInit());
-        System.out.println(transactionListInit().toString());
+
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/transactions/inTimeRange")
                 .param("start", "2020-04-13")

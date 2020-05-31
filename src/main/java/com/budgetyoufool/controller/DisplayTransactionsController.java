@@ -23,7 +23,9 @@ public class DisplayTransactionsController {
     }
 
     @GetMapping("/daily")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByDay(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<List<Transaction>> showListOfTransactionsByDay(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
         if (date.isAfter(LocalDate.now())) {
             throw new DateException();
         } else {
@@ -32,14 +34,17 @@ public class DisplayTransactionsController {
     }
 
     @GetMapping("/monthly")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByMonth(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<List<Transaction>> showListOfTransactionsByMonth(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
         return ResponseEntity.ok(groupingService.getTransactionsListByMonth(date));
     }
 
     @GetMapping("/inTimeRange")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByTimeRange(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+    public ResponseEntity<List<Transaction>> showListOfTransactionsByTimeRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+
         if (start.isAfter(LocalDate.now()) || end.isAfter(LocalDate.now())) {
             throw new DateException();
         } else if (start.isAfter(end)) {
