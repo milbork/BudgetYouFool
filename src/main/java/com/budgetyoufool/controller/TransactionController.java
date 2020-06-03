@@ -10,6 +10,8 @@ import com.budgetyoufool.service.transaction.TransactionService;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping("/")
@@ -66,11 +71,15 @@ public class TransactionController {
     }
 
     @GetMapping(path = "/transactions/{id}")
-    public ResponseEntity<TransactionDTO> readTransaction(@PathVariable @NotNull @Valid Long id) {
+    public ResponseEntity<EntityModel<TransactionDTO>> readTransaction(@PathVariable @NotNull @Valid Long id) {
+        Optional<TransactionDTO> transactionDTO = Optional.ofNullable(transactionService.showTransaction(id));
+
+        Link link = linkTo(TransactionController.class).slash("transactions").slash(id).withSelfRel();
+        EntityModel<TransactionDTO> entityModel = new EntityModel<>(transactionDTO.get(), link);
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .body(transactionService.showTransaction(id));
+                .body(entityModel);
     }
 
     @PutMapping(path = "/transactions/{id}")

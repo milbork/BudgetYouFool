@@ -4,13 +4,19 @@ import com.budgetyoufool.model.DTO.TransactionSummingDTO;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.repository.TransactionRepo;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @CacheConfig(cacheNames = "SummingCache")
@@ -85,7 +91,10 @@ public class SummingServiceImpl implements SummingService {
 
         result.setIncome(addTransactions(income));
         result.setOutcome(addTransactions(outcome));
-
+       
         return result;
     }
+
+
 }
+

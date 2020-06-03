@@ -4,6 +4,7 @@ import com.budgetyoufool.model.transaction.IncomeTypeEnum;
 import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -47,7 +48,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         for (OutcomeTypeEnum e : OutcomeTypeEnum.values()) {
 
-            BigDecimal outcomeEnum = service.getListOfIncomesInTimeRange(start, end)
+            BigDecimal outcomeEnum = service.getListOfOutcomesInTimeRange(start, end)
                     .stream()
                     .filter(t -> t.getOutcomeTypeEnum().equals(e))
                     .map(Transaction::getAmount)

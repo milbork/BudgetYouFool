@@ -5,12 +5,16 @@ import com.budgetyoufool.exception.exceptions.DateMismatchException;
 import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.grupingTransactions.GroupingService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping(value = "/transactions")
@@ -23,13 +27,24 @@ public class DisplayTransactionsController {
     }
 
     @GetMapping("/daily")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByDay(
+    public ResponseEntity<CollectionModel<Transaction>> showListOfTransactionsByDay(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
         if (date.isAfter(LocalDate.now())) {
             throw new DateException();
         } else {
-            return ResponseEntity.ok(groupingService.getTransactionsListByDate(date));
+            List<Transaction> transactionList = groupingService.getTransactionsListByDate(date);
+
+            transactionList.forEach(
+                    t -> t.add(linkTo(TransactionController.class).
+                            slash("transactions")
+                            .slash(t.getId())
+                            .withSelfRel())
+            );
+            Link link = linkTo(DisplayTransactionsController.class).slash("daily").withSelfRel();
+            CollectionModel<Transaction> transactionCollectionModel = new CollectionModel<>(transactionList, link);
+
+            return ResponseEntity.ok().body(transactionCollectionModel);
         }
     }
 

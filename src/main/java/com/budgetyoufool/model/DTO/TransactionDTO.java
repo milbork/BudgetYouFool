@@ -3,6 +3,7 @@ package com.budgetyoufool.model.DTO;
 import com.budgetyoufool.model.transaction.IncomeTypeEnum;
 import com.budgetyoufool.model.transaction.OutcomeTypeEnum;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import javax.validation.constraints.PastOrPresent;
 
 @Data
 @NoArgsConstructor
-public class TransactionDTO {
+public class TransactionDTO extends RepresentationModel {
 
     private Long id;
     private IncomeTypeEnum incomeTypeEnum;

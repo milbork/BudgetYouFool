@@ -1,6 +1,7 @@
 package com.budgetyoufool.model.transaction;
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Transaction {
+public class Transaction extends RepresentationModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +32,7 @@ public class Transaction {
 
     private IncomeTypeEnum incomeTypeEnum;
 
-    public Transaction( BigDecimal amount, String description, LocalDate date, OutcomeTypeEnum outcomeTypeEnum, IncomeTypeEnum incomeTypeEnum) {
+    public Transaction(BigDecimal amount, String description, LocalDate date, OutcomeTypeEnum outcomeTypeEnum, IncomeTypeEnum incomeTypeEnum) {
 
         this.amount = amount;
         this.description = description;
@@ -40,7 +41,7 @@ public class Transaction {
         this.incomeTypeEnum = incomeTypeEnum;
     }
 
-    public Transaction( BigDecimal amount, String description, LocalDate date) {
+    public Transaction(BigDecimal amount, String description, LocalDate date) {
 
         this.amount = amount;
         this.description = description;
