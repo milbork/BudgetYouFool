@@ -5,6 +5,7 @@ import com.budgetyoufool.exception.exceptions.OperationFailedException;
 import com.budgetyoufool.exception.exceptions.TransactionTypeException;
 import com.budgetyoufool.exception.exceptions.URIResponseException;
 import com.budgetyoufool.model.DTO.TransactionDTO;
+import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.transaction.TransactionService;
 
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping("/")
@@ -36,11 +38,14 @@ public class TransactionController {
     }
 
     @GetMapping(path = "/transactions")
-    public ResponseEntity<String> addTransaction() {
+    public ResponseEntity<EntityModel<String>> addTransaction() {
+
+        Link link = linkTo(methodOn(TransactionController.class).addTransaction()).withSelfRel();
+        EntityModel<String> entityModel = new EntityModel<>("Add new transaction", link);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("Add new transaction");
+                .body(entityModel);
     }
 
     @PostMapping(path = "/transactions")
@@ -72,32 +77,43 @@ public class TransactionController {
 
     @GetMapping(path = "/transactions/{id}")
     public ResponseEntity<EntityModel<TransactionDTO>> readTransaction(@PathVariable @NotNull @Valid Long id) {
+
         Optional<TransactionDTO> transactionDTO = Optional.ofNullable(transactionService.showTransaction(id));
 
-        Link link = linkTo(TransactionController.class).slash("transactions").slash(id).withSelfRel();
-        EntityModel<TransactionDTO> entityModel = new EntityModel<>(transactionDTO.get(), link);
+        if (transactionDTO.isPresent()) {
+            Link link = linkTo(TransactionController.class).slash("transactions").slash(id).withSelfRel();
+            EntityModel<TransactionDTO> entityModel = new EntityModel<>(transactionDTO.get(), link);
 
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(entityModel);
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .body(entityModel);
+        } else {
+            throw new OperationFailedException(NAME);
+        }
     }
 
     @PutMapping(path = "/transactions/{id}")
-    public ResponseEntity<String> updateTransaction(@PathVariable @NotNull @Valid Long id,
-                                                    @RequestBody TransactionDTO transactionDTO) {
-
+    public ResponseEntity<EntityModel<String>> updateTransaction(@PathVariable @NotNull @Valid Long id,
+                                                                 @RequestBody TransactionDTO transactionDTO) {
 
         if (transactionDTO.getDate().isAfter(LocalDate.now())) {
             throw new DateException();
-
         } else if (transactionDTO.getIncomeTypeEnum() != null && transactionDTO.getOutcomeTypeEnum() == null
                 || transactionDTO.getIncomeTypeEnum() == null && transactionDTO.getOutcomeTypeEnum() != null) {
+
             transactionDTO.setId(id);
             transactionService.updateTransaction(transactionDTO);
 
+            Link link = linkTo(TransactionController.class)
+                    .slash("transactions")
+                    .slash(transactionDTO.getId())
+                    .withSelfRel();
+
+            EntityModel<String> entityModel = new EntityModel<>("Transaction successfully updated!", link);
+
             return ResponseEntity
                     .ok()
-                    .body("Transaction successfully updated!");
+                    .body(entityModel);
         } else {
             throw new TransactionTypeException();
         }

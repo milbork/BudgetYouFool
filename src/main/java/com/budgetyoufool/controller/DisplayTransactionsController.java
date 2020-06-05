@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping(value = "/transactions")
@@ -35,13 +36,12 @@ public class DisplayTransactionsController {
         } else {
             List<Transaction> transactionList = groupingService.getTransactionsListByDate(date);
 
-            transactionList.forEach(
-                    t -> t.add(linkTo(TransactionController.class).
-                            slash("transactions")
-                            .slash(t.getId())
-                            .withSelfRel())
-            );
-            Link link = linkTo(DisplayTransactionsController.class).slash("daily").withSelfRel();
+            addLinksToTransactions(transactionList);
+
+            Link link = linkTo(methodOn(DisplayTransactionsController.class)
+                    .showListOfTransactionsByDay(date))
+                    .withSelfRel();
+
             CollectionModel<Transaction> transactionCollectionModel = new CollectionModel<>(transactionList, link);
 
             return ResponseEntity.ok().body(transactionCollectionModel);
@@ -49,14 +49,24 @@ public class DisplayTransactionsController {
     }
 
     @GetMapping("/monthly")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByMonth(
+    public ResponseEntity<CollectionModel<Transaction>> showListOfTransactionsByMonth(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        return ResponseEntity.ok(groupingService.getTransactionsListByMonth(date));
+        List<Transaction> transactionList = groupingService.getTransactionsListByMonth(date);
+
+        addLinksToTransactions(transactionList);
+
+        Link link = linkTo(methodOn(DisplayTransactionsController.class)
+                .showListOfTransactionsByMonth(date))
+                .withSelfRel();
+
+        CollectionModel<Transaction> collectionModel = new CollectionModel<>(transactionList, link);
+
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/inTimeRange")
-    public ResponseEntity<List<Transaction>> showListOfTransactionsByTimeRange(
+    public ResponseEntity<CollectionModel<Transaction>> showListOfTransactionsByTimeRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
 
@@ -66,7 +76,25 @@ public class DisplayTransactionsController {
             throw new DateMismatchException();
         } else {
 
-            return ResponseEntity.ok(groupingService.getTransactionsListByTimeRange(start, end));
+            List<Transaction> transactionList = groupingService.getTransactionsListByTimeRange(start, end);
+            addLinksToTransactions(transactionList);
+
+            Link link = linkTo(methodOn(DisplayTransactionsController.class)
+                    .showListOfTransactionsByTimeRange(start, end))
+                    .withSelfRel();
+
+            CollectionModel<Transaction> collectionModel = new CollectionModel<>(transactionList, link);
+
+            return ResponseEntity.ok(collectionModel);
         }
+
+    }
+    private static void addLinksToTransactions(List<Transaction> list){
+
+        list.forEach(t -> t.add(linkTo(TransactionController.class)
+                .slash("transactions")
+                .slash(t.getId())
+                .withSelfRel())
+        );
     }
 }
