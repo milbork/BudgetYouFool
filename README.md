@@ -32,5 +32,5 @@ A simple REST-full app for managing and analysing personal home budget.
 
 ## Status
 
-Project is: _in progress
-Available on: https://budget-you-fool.herokuapp.com//swagger-ui.html#
+* Project is: _in progress
+* Available on: https://budget-you-fool.herokuapp.com//swagger-ui.html#
