@@ -5,12 +5,7 @@ import com.budgetyoufool.exception.exceptions.OperationFailedException;
 import com.budgetyoufool.exception.exceptions.TransactionTypeException;
 import com.budgetyoufool.exception.exceptions.URIResponseException;
 import com.budgetyoufool.model.DTO.TransactionDTO;
-import com.budgetyoufool.model.transaction.Transaction;
 import com.budgetyoufool.service.transaction.TransactionService;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -18,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
